@@ -1,12 +1,13 @@
 import numpy as np
 
 class IsingLattice:
-    self.E = 0.0
-    self.E2 = 0.0
-    self.M = 0.0
-    self.M2 = 0.0
 
-    self.n_cycles = 0
+    E = 0.0
+    E2 = 0.0
+    M = 0.0
+    M2 = 0.0
+
+    n_cycles = 0
 
     def __init__(self, n_rows, n_cols):
         self.n_rows = n_rows
@@ -16,28 +17,24 @@ class IsingLattice:
     def energy(self):
         "Return the total energy of the current lattice configuration."
         energy = 0.0
-        for i in range(self.n_rows):
-            for j in range(self.n_cols):
-                bottom_neighbor = i+1
-                right_neighbor = j+1
-                if bottom_neighbor >= self.n_rows:
-                    bottom_neighbor = 0
-                if right_neighbor >= self.n_cols:
-                    right_neighbor = 0
-                energy -= self.lattice[i,j]*self.lattice[i,right_neighbor]
-                energy -= self.lattice[i,j]*self.lattice[bottom_neighbor,j]
+
         return energy
 
     def magnetisation(self):
         "Return the total magnetisation of the current lattice configuration."
         magnetisation = 0.0
-        for i in range(self.n_rows):
-            for j in range(self.n_cols):
-                magnetisation += self.lattice[i,j]
+
         return magnetisation
 
     def montecarlostep(self, T):
         # complete this function so that it performs a single Monte Carlo step
+
+        #the following two lines will select the coordinates of the random spin for you
+        random_i = np.random.choice(range(1, self.n_rows))
+        random_j = np.random.choice(range(1, self.n_cols))
+        #the following line will choose a random number in the rang e[0,1) for you
+        random_number = np.random.random()
+
         # the function should end by calculating and returning both the energy and magnetisation:
 
         return energy, magnetisation
