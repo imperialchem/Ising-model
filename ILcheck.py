@@ -31,8 +31,8 @@ left_figure.text(0, 4.8, "Expected M = {}".format(target_magnetisation))
 left_figure.text(0, 5.2, "Actual M = {}".format(actual_magnetisation))
 
 #plot the "perfectly disordered", high energy, state in the right figure
-high_energy_latticerow1 = [1, -1]*(lattice_size/2)
-high_energy_latticerow2 = [-1, 1]*(lattice_size/2)
+high_energy_latticerow1 = [1, -1]*int(lattice_size/2)
+high_energy_latticerow2 = [-1, 1]*int(lattice_size/2)
 lattice.lattice = np.array([high_energy_latticerow1, high_energy_latticerow2]*(lattice_size/2))
 right_figure.matshow(lattice.lattice)
 right_figure.set_title("Energy Maximum")
