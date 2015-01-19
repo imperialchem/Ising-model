@@ -6,6 +6,7 @@ from time import *
 import numpy as np
 
 il = IsingLattice(8,8)
+spins = 8*8
 
 figure = pl.figure()
 matax = figure.add_subplot(3,1,1)
@@ -27,7 +28,7 @@ def data_gen():
     t = data_gen.t
     spins = 8*8
     while True:
-        energy, magnetisation = il.montecarlostep(1.0)
+        energy, magnetisation = il.montecarlostep(0.5)
         t += 1
         yield t, il.lattice,1.0*energy/spins,1.0*magnetisation/spins
 
@@ -60,8 +61,8 @@ pl.show()
 
 E, E2, M, M2 = il.statistics()
 
-print "Averaged quantities:"
-print "E = ", E
-print "E*E = ", E2
-print "M = ", M
-print "M*M = ", M2
+print("Averaged quantities:")
+print("E = ", E)
+print("E*E = ", E2)
+print("M = ", M/spins)
+print("M*M = ", M2/spins/spins)
