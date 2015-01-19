@@ -57,3 +57,11 @@ def updateFigure(data):
 anim = animation.FuncAnimation(figure, updateFigure, data_gen, repeat=False, interval=0)
 
 pl.show()
+
+E, E2, M, M2 = il.statistics()
+
+print "Averaged quantities:"
+print "E = ", E
+print "E*E = ", E2
+print "M = ", M
+print "M*M = ", M2
