@@ -1,51 +1,50 @@
 from IsingLattice import *
 from matplotlib import pylab as pl
-from matplotlib import animation
-import sys
-from time import *
 import numpy as np
 
-il = IsingLattice(8,8)
-spins = 8*8
-runtime = 100000
+n_rows = 8
+n_cols = 8
+il = IsingLattice(n_rows, n_cols)
+il.lattice = np.ones((n_rows, n_cols))
+spins = n_rows*n_cols
+runtime = 50000
 times = range(runtime)
-temps = np.arange(0.5, 5.0, 0.05)
+temps = np.arange(2.0, 3.0, 0.1)
 energies = []
 magnetisations = []
-C = []
 energy_errs = []
 mag_errs = []
 for t in temps:
-    E = []
-    M = []
     for i in times:
         if i % 100 == 0:
-            print t, i
+            print(t, i)
         energy, magnetisation = il.montecarlostep(t)
-        E.append(energy)
-        M.append(magnetisation)
-    cutoff = int(runtime/2)
-
-    aveE = np.mean(E[cutoff:])
-    aveE2 = np.mean(E[cutoff:]*E[cutoff:])
-    aveM = np.mean(M[cutoff:])
-    aveM2 = np.mean(M[cutoff:]*M[cutoff:])
-    print("<E> = ", aveE, "+-", np.sqrt((aveE2-aveE*aveE)/E.shape[0]))
-    print("<M> = ", aveM, "+-", np.sqrt((aveM2-aveM*aveM)/M.shape[0]))
+    aveE, aveE2, aveM, aveM2, n_cycles = il.statistics()
+    print("<E> = ", aveE, "+-", np.sqrt((aveE2-aveE*aveE)/n_cycles))
+    print("<M> = ", aveM, "+-", np.sqrt((aveM2-aveM*aveM)/n_cycles))
     energies.append(aveE/spins)
-    energy_errs.append(np.sqrt((aveE2-aveE*aveE)/len(E)/spins))
-    mag_errs.append(np.sqrt((aveM2-aveM*aveM)/len(M)/spins))
+    energy_errs.append(np.sqrt((aveE2-aveE*aveE)/n_cycles/spins))
+    mag_errs.append(np.sqrt((aveM2-aveM*aveM)/n_cycles/spins))
     magnetisations.append(aveM/spins)
-    C.append((aveE2-aveE*aveE)/(t*t)/spins)
-
+    #reset the IL object for the next cycle
+    il.E = 0.0
+    il.E2 = 0.0
+    il.M = 0.0
+    il.M2 = 0.0
+    il.n_cycles = 0
 fig = pl.figure()
-enerax = fig.add_subplot(3,1,1)
-magax = fig.add_subplot(3,1,2)
-Cax = fig.add_subplot(3,1,3)
+enerax = fig.add_subplot(2,1,1)
+enerax.set_ylabel("Energy per spin")
+enerax.set_xlabel("Temperature")
+enerax.set_ylim([-2.1, 2.1])
+magax = fig.add_subplot(2,1,2)
+magax.set_ylabel("Magnetisation per spin")
+magax.set_xlabel("Temperature")
+magax.set_ylim([-1.1, 1.1])
 enerax.errorbar(temps, energies, yerr=energy_errs)
 magax.errorbar(temps, magnetisations, yerr=mag_errs)
-Cax.plot(temps, C)
+print energies, magnetisations
 pl.show()
 
-final_data = np.column_stack((temps, energies, energy_errs, magnetisations, mag_errs, C))
+final_data = np.column_stack((temps, energies, energy_errs, magnetisations, mag_errs))
 np.savetxt("8x8.dat", final_data)
