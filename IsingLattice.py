@@ -17,33 +17,21 @@ class IsingLattice:
     def energy(self):
         "Return the total energy of the current lattice configuration."
         energy = 0.0
-
         return energy
 
     def magnetisation(self):
         "Return the total magnetisation of the current lattice configuration."
-        magnetisation = 0.0
-
         return magnetisation
 
     def montecarlostep(self, T):
         # complete this function so that it performs a single Monte Carlo step
-
+        energy = self.energy()
         #the following two lines will select the coordinates of the random spin for you
-        random_i = np.random.choice(range(1, self.n_rows))
-        random_j = np.random.choice(range(1, self.n_cols))
+        random_i = np.random.choice(range(0, self.n_rows))
+        random_j = np.random.choice(range(0, self.n_cols))
         #the following line will choose a random number in the rang e[0,1) for you
         random_number = np.random.random()
 
-        # the function should end by calculating and returning both the energy and magnetisation:
-
-        return energy, magnetisation
-        
     def statistics(self):
         # complete this function so that it calculates the correct values for the averages of E, E*E (E2), M, M*M (M2), and returns them
-        aveE = 0.0
-        aveE2 = 0.0
-        aveM = 0.0
-        aveM2 = 0.0
-
-        return aveE, aveE2, aveM, aveM2
+        return
