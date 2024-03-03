@@ -8,7 +8,7 @@ class IsingLattice:
     M = 0.0
     M2 = 0.0
 
-    n_cycles = 0
+    n_steps = 0
 
     def __init__(self, n_rows, n_cols):
         self.n_rows = n_rows
