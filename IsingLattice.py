@@ -21,6 +21,7 @@ class IsingLattice:
 
     def magnetisation(self):
         "Return the total magnetisation of the current lattice configuration."
+        magnetisation = 0.0
         return magnetisation
 
     def montecarlostep(self, T):
@@ -33,5 +34,5 @@ class IsingLattice:
         random_number = np.random.random()
 
     def statistics(self):
-        # complete this function so that it calculates the correct values for the averages of E, E*E (E2), M, M*M (M2), and returns them
-        return
+        # complete this function so that it calculates the correct values for the averages of E, E*E (E2), M, M*M (M2), and returns them with Nsteps
+        return 

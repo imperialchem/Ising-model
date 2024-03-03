@@ -1,6 +1,7 @@
 from IsingLattice import *
-from matplotlib import pylab as pl
+from matplotlib import pyplot as pl
 from matplotlib import animation
+import matplotlib as mpl
 import numpy as np
 
 il = IsingLattice(8,8)
@@ -13,7 +14,7 @@ enerax = figure.add_subplot(3,1,2)
 enerax.set_ylabel("E per spin / k_B")
 magnetax = figure.add_subplot(3,1,3)
 magnetax.set_ylabel("M per spin")
-mat = matax.matshow(il.lattice, cmap=pl.cm.gray, vmin=-1.0, vmax=1.0)
+mat = matax.matshow(il.lattice, cmap=mpl.cm.gray, vmin=-1.0, vmax=1.0)
 matax.xaxis.set_ticks([])
 matax.yaxis.set_ticks([])
 
@@ -58,11 +59,11 @@ def updateFigure(data):
 
     return energies, mat
 
-anim = animation.FuncAnimation(figure, updateFigure, data_gen, repeat=False, interval=0)
+anim = animation.FuncAnimation(figure, updateFigure, data_gen, repeat=False, interval=200)
 
 pl.show()
 
-E, E2, M, M2 = il.statistics()
+E, E2, M, M2, N = il.statistics()
 
 print("Averaged quantities:")
 print("E = ", E/spins)
