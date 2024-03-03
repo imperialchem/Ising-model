@@ -3,8 +3,9 @@ from matplotlib import pyplot as plt
 from matplotlib import animation
 import matplotlib as mpl
 
-il = IsingLattice(8, 8)
-spins = 8 * 8
+n_rows, n_cols = 8, 8
+il = IsingLattice(n_rows, n_cols)
+spins = n_rows * n_cols
 temperature = 0.5
 
 figure = plt.figure()
@@ -31,7 +32,7 @@ xdata, ener_ydata, m_ydata = [], [], []
 def data_gen():
     global temperature
     t = data_gen.t
-    spins = 8 * 8
+    spins = il.n_rows * il.n_cols
     while True:
         energy, magnetisation = il.montecarlostep(temperature)
         t += 1
