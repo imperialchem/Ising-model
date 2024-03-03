@@ -2,7 +2,6 @@ from IsingLattice import IsingLattice
 from matplotlib import pyplot as plt
 from matplotlib import animation
 import matplotlib as mpl
-import numpy as np
 
 il = IsingLattice(8, 8)
 spins = 8 * 8
