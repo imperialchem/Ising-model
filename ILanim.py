@@ -1,38 +1,68 @@
-from typing import Optional
+from dataclasses import dataclass
+from typing import List, Optional
 
 from IsingLattice import IsingLattice
 from matplotlib import pyplot as plt
 from matplotlib import animation
+from matplotlib.figure import Figure
 import matplotlib as mpl
 import itertools
 import functools
 
 # Increase this number for a faster animation!
 STRIDE = 1  # How many Monte-Carlo steps per animation frame
-N_STEPS = 500  # How many steps to run, in interactive mode.
+N_STEPS = 500  # How many steps to run, when running in a notebook or IPython
 
-n_rows, n_cols = 8, 8
-il = IsingLattice(n_rows, n_cols)
-spins = n_rows * n_cols
-temperature = 0.5
+N_ROWS, N_COLS = 8, 8
+TEMPERATURE = 0.5
 
 
-(figure, (matax, enerax, magnetax)) = plt.subplots(3)
-enerax.set_ylabel("$E$ per spin / $k_B$")
-magnetax.set_ylabel("$M$ per spin")
+@dataclass
+class AnimationState:
+    """
+    Current state of the animation
+    """
 
-colour_map = mpl.colormaps["gray"]
-matrix = matax.matshow(il.lattice, cmap=colour_map, vmin=-1.0, vmax=1.0)
-matax.xaxis.set_ticks([])
-matax.yaxis.set_ticks([])
+    figure: Figure
+    enerax: ...
+    magnetax: ...
+    matrix: ...
+    matax: ...
+    energies: ...
+    magnetisations: ...
+    x_data: List[int]
+    ener_y_data: List[float]
+    m_y_data: List[float]
 
-(energies,) = enerax.plot([], [], "-", lw=2, label="$E$")
-enerax.set_ylim(-2.1, 2.1)
 
-(magnetisations,) = magnetax.plot([], [], "-", lw=2, label="$M$")
-magnetax.set_ylim(-1.1, 1.1)
+def setup_figures(il: IsingLattice) -> AnimationState:
+    (figure, (matax, enerax, magnetax)) = plt.subplots(3)
+    enerax.set_ylabel("$E$ per spin / $k_B$")
+    magnetax.set_ylabel("$M$ per spin")
 
-xdata, ener_ydata, m_ydata = [], [], []
+    colour_map = mpl.colormaps["gray"]
+    matrix = matax.matshow(il.lattice, cmap=colour_map, vmin=-1.0, vmax=1.0)
+    matax.xaxis.set_ticks([])
+    matax.yaxis.set_ticks([])
+
+    (energies,) = enerax.plot([], [], "-", lw=2, label="$E$")
+    enerax.set_ylim(-2.1, 2.1)
+
+    (magnetisations,) = magnetax.plot([], [], "-", lw=2, label="$M$")
+    magnetax.set_ylim(-1.1, 1.1)
+
+    return AnimationState(
+        figure=figure,
+        enerax=enerax,
+        magnetax=magnetax,
+        matrix=matrix,
+        matax=matax,
+        energies=energies,
+        magnetisations=magnetisations,
+        x_data=[],
+        ener_y_data=[],
+        m_y_data=[],
+    )
 
 
 def data_gen(temp: float, start=0, n_steps=None, stride=1):
@@ -68,29 +98,32 @@ def data_gen(temp: float, start=0, n_steps=None, stride=1):
             yield step, il.lattice, 1.0 * energy / spins, 1.0 * magnetisation / spins
 
 
-def updateFigure(data):
+def updateFigure(data, state: AnimationState):
     step, lattice, energy, mag = data
-    matrix.set_data(lattice)
-    xdata.append(step)
-    ener_ydata.append(energy)
-    m_ydata.append(mag)
-    xmin, xmax = enerax.get_xlim()
+    s = state
+
+    s.matrix.set_data(lattice)
+    s.x_data.append(step)
+    s.ener_y_data.append(energy)
+    s.m_y_data.append(mag)
+    xmin, xmax = s.enerax.get_xlim()
     if step >= xmax:
-        enerax.set_xlim(xmin, 2 * xmax)
-        enerax.figure.canvas.draw()
-        magnetax.set_xlim(xmin, 2 * xmax)
-        magnetax.figure.canvas.draw()
-    enerax.set_title("Step {}.".format(step))
-    enerax.figure.canvas.draw()
-    energies.set_data(xdata, ener_ydata)
-    magnetax.figure.canvas.draw()
-    magnetisations.set_data(xdata, m_ydata)
+        s.enerax.set_xlim(xmin, 2 * xmax)
+        s.enerax.figure.canvas.draw()
+        s.magnetax.set_xlim(xmin, 2 * xmax)
+        s.magnetax.figure.canvas.draw()
+    s.enerax.set_title("Step {}.".format(step))
+    s.enerax.figure.canvas.draw()
+    s.energies.set_data(s.x_data, s.ener_y_data)
+    s.magnetax.figure.canvas.draw()
+    s.magnetisations.set_data(s.x_data, s.m_y_data)
 
-    return energies, magnetisations, matrix
+    return s.energies, s.magnetisations, s.matrix
 
 
-def print_stats():
+def print_stats(il: IsingLattice):
     E, E2, M, M2, N = il.statistics()
+    spins = il.n_rows * il.n_cols
 
     print("Averaged quantities:")
     print("E = ", E / spins)
@@ -101,13 +134,20 @@ def print_stats():
 
 
 def setup_animation(
-    n_steps: Optional[int] = 2000, frame_interval: int = 30, stride: int = 1
+    il: IsingLattice,
+    temperature: float = TEMPERATURE,
+    n_steps: Optional[int] = 2000,
+    frame_interval: int = 30,
+    stride: int = 1,
 ) -> animation.FuncAnimation:
     """
     Create the animation!
 
     Parameters
     ----------
+    il : IsingLattice
+        The IsingLattice object to simulate.
+
     `n_steps` : int | None
         How many rames to animate.
         If `None`, animates until stopped.
@@ -117,10 +157,13 @@ def setup_animation(
         How many simulation steps to run per animation frame.
 
     """
+    state = setup_figures(il)
 
     _data_gen = functools.partial(
         data_gen, temp=temperature, n_steps=n_steps, stride=stride
     )
+
+    _updateFigure = functools.partial(updateFigure, state=state)
 
     if n_steps is None:
         # Otherwise we have a warning about a possibly infinite run
@@ -129,8 +172,8 @@ def setup_animation(
         save_count = n_steps
 
     return animation.FuncAnimation(
-        figure,
-        updateFigure,
+        state.figure,
+        _updateFigure,
         _data_gen,
         repeat=False,
         interval=frame_interval,
@@ -144,8 +187,10 @@ if __name__ == "__main__":
     n_steps = N_STEPS if is_interactive else None
     frame_interval = 30
 
+    il = IsingLattice(n_rows=N_ROWS, n_cols=N_COLS)
+
     anim = setup_animation(
-        n_steps=n_steps, frame_interval=frame_interval, stride=STRIDE
+        il, n_steps=n_steps, frame_interval=frame_interval, stride=STRIDE
     )
 
     if is_interactive:
@@ -158,4 +203,4 @@ if __name__ == "__main__":
     else:
         plt.show(block=True)
 
-    print_stats()
+    print_stats(il)
