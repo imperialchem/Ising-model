@@ -9,11 +9,13 @@ import functools
 
 # Increase this number for a faster animation!
 STRIDE = 1  # How many Monte-Carlo steps per animation frame
+N_STEPS = 500  # How many steps to run, in interactive mode.
 
 n_rows, n_cols = 8, 8
 il = IsingLattice(n_rows, n_cols)
 spins = n_rows * n_cols
 temperature = 0.5
+
 
 (figure, (matax, enerax, magnetax)) = plt.subplots(3)
 enerax.set_ylabel("$E$ per spin / $k_B$")
@@ -138,6 +140,22 @@ def setup_animation(
 
 
 if __name__ == "__main__":
-    anim = setup_animation(n_steps=None, frame_interval=10, stride=STRIDE)
-    plt.show(block=True)
+    is_interactive = plt.isinteractive()
+    n_steps = N_STEPS if is_interactive else None
+    frame_interval = 30
+
+    anim = setup_animation(
+        n_steps=n_steps, frame_interval=frame_interval, stride=STRIDE
+    )
+
+    if is_interactive:
+        print(f"Rendering {n_steps} frames of animation")
+        from IPython.display import HTML, display
+
+        display(HTML(anim.to_html5_video()))
+        # To prevent duplicate of the figure appearing after animation
+        plt.close()
+    else:
+        plt.show(block=True)
+
     print_stats()
