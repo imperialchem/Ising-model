@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+from matplotlib.axes import Axes
+
 from IsingLattice import IsingLattice
 from matplotlib import pyplot as plt
 from matplotlib import animation
@@ -24,12 +26,13 @@ class AnimationState:
     """
 
     figure: Figure
-    enerax: ...
-    magnetax: ...
+    enerax: Axes
+    magnetax: Axes
+    matax: Axes
     matrix: ...
-    matax: ...
     energies: ...
     magnetisations: ...
+    step_label: ...
     x_data: List[int]
     ener_y_data: List[float]
     m_y_data: List[float]
@@ -44,6 +47,15 @@ def setup_figures(il: IsingLattice) -> AnimationState:
     matrix = matax.matshow(il.lattice, cmap=colour_map, vmin=-1.0, vmax=1.0)
     matax.xaxis.set_ticks([])
     matax.yaxis.set_ticks([])
+    # step_label = enerax.set_title("Step: 0")
+    matax: Axes
+    step_label = matax.text(
+        il.n_cols / 2 - 1,
+        il.n_rows + 3,
+        "",
+        transform=matax.transData,
+        horizontalalignment="center",
+    )
 
     (energies,) = enerax.plot([], [], "-", lw=2, label="$E$")
     enerax.set_ylim(-2.1, 2.1)
@@ -59,6 +71,7 @@ def setup_figures(il: IsingLattice) -> AnimationState:
         matax=matax,
         energies=energies,
         magnetisations=magnetisations,
+        step_label=step_label,
         x_data=[],
         ener_y_data=[],
         m_y_data=[],
@@ -102,23 +115,25 @@ def updateFigure(data, state: AnimationState):
     step, lattice, energy, mag = data
     s = state
 
-    s.matrix.set_data(lattice)
     s.x_data.append(step)
     s.ener_y_data.append(energy)
     s.m_y_data.append(mag)
+
     xmin, xmax = s.enerax.get_xlim()
     if step >= xmax:
         s.enerax.set_xlim(xmin, 2 * xmax)
-        s.enerax.figure.canvas.draw()
+        # s.enerax.figure.canvas.draw()
         s.magnetax.set_xlim(xmin, 2 * xmax)
-        s.magnetax.figure.canvas.draw()
-    s.enerax.set_title("Step {}.".format(step))
-    s.enerax.figure.canvas.draw()
+
+        # Redraw!
+        s.figure.canvas.draw()
+
+    s.matrix.set_data(lattice)
+    s.step_label.set_text(f"Step: {step}")
     s.energies.set_data(s.x_data, s.ener_y_data)
-    s.magnetax.figure.canvas.draw()
     s.magnetisations.set_data(s.x_data, s.m_y_data)
 
-    return s.energies, s.magnetisations, s.matrix
+    return s.energies, s.magnetisations, s.matrix, s.step_label
 
 
 def print_stats(il: IsingLattice):
