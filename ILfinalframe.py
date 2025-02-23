@@ -1,5 +1,5 @@
 from IsingLattice import IsingLattice
-from matplotlib import pylab as plt
+from matplotlib import pyplot as plt
 import numpy as np
 
 n_rows = 8

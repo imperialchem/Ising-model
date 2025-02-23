@@ -1,5 +1,5 @@
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as plt
 import IsingLattice as il
 
 
@@ -8,7 +8,7 @@ import IsingLattice as il
 
 lattice_size = 4
 
-fig = pl.figure()
+fig = plt.figure()
 left_figure = fig.add_subplot(1,3,1)
 middle_figure = fig.add_subplot(1,3,2)
 right_figure = fig.add_subplot(1,3,3)
@@ -65,4 +65,4 @@ middle_figure.text(0, 4.8, "Expected M = {}".format(target_magnetisation))
 middle_figure.text(0, 5.2, "Actual M = {}".format(actual_magnetisation))
 
 #draw the whole figure on the screen
-pl.show()
+plt.show()
