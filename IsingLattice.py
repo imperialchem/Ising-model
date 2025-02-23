@@ -3,17 +3,17 @@ import numpy as np
 
 
 class IsingLattice:
-    E = 0.0
-    E2 = 0.0
-    M = 0.0
-    M2 = 0.0
-
-    n_steps = 0
 
     def __init__(self, n_rows, n_cols):
         self.n_rows = n_rows
         self.n_cols = n_cols
         self.lattice = np.random.choice([-1, 1], size=(n_rows, n_cols))
+        #Running sums
+        self.E = 0.0
+        self.E2 = 0.0
+        self.M = 0.0
+        self.M2 = 0.0
+        self.n_steps = 0
 
     def energy(self) -> float:
         """Return the total energy of the current lattice configuration."""
@@ -34,13 +34,13 @@ class IsingLattice:
         # the following two lines will select the coordinates of the random spin for you
         random_i = np.random.choice(range(0, self.n_rows))
         random_j = np.random.choice(range(0, self.n_cols))
-        # the following line will choose a random number in the rang e[0,1) for you
+        # the following line will choose for you a random number in the range [0,1)
         random_number = np.random.random()
         ...
 
     def statistics(self) -> Tuple[float, float, float, float, int]:
         """Returns the averaged values of energy, energy squared, magnetisation,
-        magnetisation squared, and the current step."""
+        magnetisation squared, and the current step, in this order."""
         # complete this function so that it calculates the correct values for the averages of E, E*E (E2), M, M*M (M2), and returns them with Nsteps
         ...
 
