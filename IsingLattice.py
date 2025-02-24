@@ -9,10 +9,10 @@ class IsingLattice:
         self.n_cols = n_cols
         self.lattice = np.random.choice([-1, 1], size=(n_rows, n_cols))
         #Running sums
-        self.E = 0.0
-        self.E2 = 0.0
-        self.M = 0.0
-        self.M2 = 0.0
+        self.E = self.energy()
+        self.E2 = self.E**2
+        self.M = self.magnetisation()
+        self.M2 = self.M**2
         self.n_steps = 0
 
     def energy(self) -> float:
