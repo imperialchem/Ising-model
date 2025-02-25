@@ -51,7 +51,7 @@ def setup_figures(il: IsingLattice) -> AnimationState:
     matax: Axes
     step_label = matax.text(
         il.n_cols / 2 - 1,
-        il.n_rows + 3,
+        il.n_rows + 1,
         "",
         transform=matax.transData,
         horizontalalignment="center",
@@ -180,6 +180,9 @@ def setup_animation(
 
     _updateFigure = functools.partial(updateFigure, state=state)
 
+    def _init_func():
+        return state.energies, state.magnetisations, state.matrix, state.step_label
+
     if n_steps is None:
         # Otherwise we have a warning about a possibly infinite run
         save_count = 100
@@ -190,6 +193,7 @@ def setup_animation(
         state.figure,
         _updateFigure,
         _data_gen,
+        init_func=_init_func,
         repeat=False,
         interval=frame_interval,
         save_count=save_count,
