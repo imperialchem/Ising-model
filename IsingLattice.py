@@ -1,4 +1,3 @@
-from typing import Tuple
 import numpy as np
 
 
@@ -15,17 +14,17 @@ class IsingLattice:
         self.M2 = self.M**2
         self.n_steps = 0
 
-    def energy(self) -> float:
+    def energy(self):
         """Return the total energy of the current lattice configuration."""
         energy = 0.0
         return energy
 
-    def magnetisation(self) -> float:
+    def magnetisation(self):
         """Return the total magnetisation of the current lattice configuration."""
         magnetisation = 0.0
         return magnetisation
 
-    def montecarlostep(self, temp: float) -> Tuple[float, float]:
+    def montecarlostep(self, temp):
         """A single Monte-Carlo trial move. Attempts to flip a radnom spin.
         Returns the energy and magnetisation of the new configuration.
         """
@@ -38,13 +37,13 @@ class IsingLattice:
         random_number = np.random.random()
         ...
 
-    def statistics(self) -> Tuple[float, float, float, float, int]:
+    def statistics(self):
         """Returns the averaged values of energy, energy squared, magnetisation,
         magnetisation squared, and the current step, in this order."""
         # complete this function so that it calculates the correct values for the averages of E, E*E (E2), M, M*M (M2), and returns them with Nsteps
         ...
 
-    def delta_energy(self, i: int, j: int) -> float:
+    def delta_energy(self, i, j):
         """Return the change in energy if the spin at (i,j) were to be flipped."""
         # Optional
         ...
