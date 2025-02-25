@@ -22,4 +22,6 @@ elapsed_time = end_time - start_time
 print("2000 steps took {} s".format(elapsed_time))
 
 prof.print_stats()
-prof.dump_stats("ising.prof")
+
+#profiling data can be saved to a file and analysed with tools like pstats or SnakeViz
+#prof.dump_stats("ising.prof")
