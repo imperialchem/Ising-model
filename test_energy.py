@@ -1,3 +1,8 @@
+# This file contains test for different functionality of your IsingLattice program.
+# This is not meant for data analysis, only to check if your code is performing
+# tasks as expected. Test are run through the pytest framework installed by default
+# with Anaconda.
+
 from IsingLattice import IsingLattice
 
 import numpy as np
