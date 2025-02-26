@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class IsingLattice:
 
     def __init__(self, n_rows, n_cols):
@@ -8,10 +7,10 @@ class IsingLattice:
         self.n_cols = n_cols
         self.lattice = np.random.choice([-1, 1], size=(n_rows, n_cols))
         #Running sums
-        self.E = self.energy()
-        self.E2 = self.E**2
-        self.M = self.magnetisation()
-        self.M2 = self.M**2
+        self.E_tally = self.energy()
+        self.E2_tally = self.E**2
+        self.M_tally = self.magnetisation()
+        self.M2_tally = self.M**2
         self.n_steps = 0
 
     def energy(self):
@@ -25,8 +24,8 @@ class IsingLattice:
         return magnetisation
 
     def montecarlostep(self, temp):
-        """A single Monte-Carlo trial move. Attempts to flip a radnom spin.
-        Returns the energy and magnetisation of the new configuration.
+        """A single Monte-Carlo trial move. Attempts to flip a random spin.
+        Returns a tuple with the energy and magnetisation of the new configuration.
         """
         # complete this function so that it performs a single Monte Carlo step
         energy = self.energy()
@@ -38,8 +37,9 @@ class IsingLattice:
         ...
 
     def statistics(self):
-        """Returns the averaged values of energy, energy squared, magnetisation,
-        magnetisation squared, and the current step, in this order."""
+        """Returns a tuple with the averaged values of energy, energy squared,
+        magnetisation, magnetisation squared, and the current step, in this order.
+        """
         # complete this function so that it calculates the correct values for the averages of E, E*E (E2), M, M*M (M2), and returns them with Nsteps
         ...
 
