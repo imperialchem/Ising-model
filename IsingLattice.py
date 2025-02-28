@@ -6,12 +6,15 @@ class IsingLattice:
         self.n_rows = n_rows
         self.n_cols = n_cols
         self.lattice = np.random.choice([-1, 1], size=(n_rows, n_cols))
+
+        current_en = self.energy()
+        current_mag = self.magnetisation()
+
         # Running sums
-        self.E_tally = self.energy()
-        # NOTE: this only holds true on the first step.
-        self.E_sq_tally = self.E_tally**2
-        self.M_tally = self.magnetisation()
-        self.M_sq_tally = self.M_tally**2
+        self.E_tally = current_en
+        self.E2_tally = current_en**2
+        self.M_tally = current_mag
+        self.M2_tally = current_mag**2
 
         self.n_steps = 0
 
