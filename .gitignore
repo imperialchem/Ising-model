@@ -2,6 +2,12 @@
 __pycache__/
 *.py[cod]
 
+# Notebook Caches
+.ipynb_checkpoints/
+
+# Folder for testing
+.no_commit/
+
 # C extensions
 *.so
 
