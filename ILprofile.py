@@ -6,6 +6,7 @@ import IsingLattice as il
 # use a relatively big lattice of 25x25 so that we get more accurate timing data
 n_rows = 25
 n_cols = 25
+save_profile = False
 
 lattice = il.IsingLattice(n_rows, n_cols)
 # record the time at which we start running
@@ -23,5 +24,6 @@ print("2000 steps took {} s".format(elapsed_time))
 
 prof.print_stats()
 
-#profiling data can be saved to a file and analysed with tools like pstats or SnakeViz
-#prof.dump_stats("ising.prof")
+# profiling data can be saved to a file and analysed with tools like pstats or SnakeViz
+if save_profile:
+    prof.dump_stats("ising.prof")
