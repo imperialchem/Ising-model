@@ -30,10 +30,10 @@ for t in temps:
     magnetisations.append(aveM)
     magnetisationsq.append(aveM2)
     # reset the IL object for the next cycle
-    il.E = 0.0
-    il.E2 = 0.0
-    il.M = 0.0
-    il.M2 = 0.0
+    il.E_tally = 0.0
+    il.E2_tally = 0.0
+    il.M_tally = 0.0
+    il.M2_tally = 0.0
     il.n_steps = 0
 fig = plt.figure()
 enerax = fig.add_subplot(2, 1, 1)
