@@ -99,7 +99,6 @@ def delta_energy(il, i, j):
     "Return the change in energy if the spin at (i,j) is flipped."
     return (
         2
-        * il.J
         * il.lattice[i, j]
         * (
             il.lattice[i, (j - 1) % il.n_cols]
